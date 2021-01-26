@@ -4,9 +4,16 @@ import springbook.user.domain.User;
 
 import java.sql.*;
 
-public abstract class UserDao {
+public class UserDao {
+
+    private ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker connectionMaker) {
+        this.connectionMaker = connectionMaker;
+    }
+
     public void add(User user) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = connectionMaker.makeConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?,?,?)");
@@ -20,10 +27,8 @@ public abstract class UserDao {
         c.close();
     }
 
-    public abstract Connection getConnection() throws ClassNotFoundException, SQLException;
-
     public User get(String id) throws SQLException, ClassNotFoundException {
-        Connection c = getConnection();
+        Connection c = connectionMaker.makeConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "select * from users where id = ?");
@@ -41,18 +46,5 @@ public abstract class UserDao {
         c.close();
 
         return user;
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new UserDao();
-        User user = new User();
-
-        user.setId("kysthayer");
-        user.setName("김영석");
-        user.setPassword("rladud");
-
-        userDao.add(user);
-
-        System.out.println(user.getId() + " 등록 성공");
     }
 }

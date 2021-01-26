@@ -3,9 +3,10 @@ package springbook.user.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DUserDao extends UserDao {
+public class DUserDao implements ConnectionMaker {
+
     @Override
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
+    public Connection makeConnection() throws ClassNotFoundException, SQLException {
         return null;
     }
 }
